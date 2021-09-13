@@ -21,6 +21,8 @@ public class Jogo extends ApplicationAdapter {
 	private float larguraDispositivo;
 	private float alturaDispositivo;
 	private float variacao = 0;
+	private float gravidade = 0;
+	private float posicaoInicialVerticalPassaro = 0;
 
 	@Override
 	public void create () {
@@ -35,6 +37,7 @@ public class Jogo extends ApplicationAdapter {
 
 		larguraDispositivo = Gdx.graphics.getWidth();
 		alturaDispositivo =  Gdx.graphics.getHeight();
+		posicaoInicialVerticalPassaro = alturaDispositivo / 2;
 	}
 
 	@Override
@@ -46,10 +49,23 @@ public class Jogo extends ApplicationAdapter {
 		if(variacao > 3)
 			variacao = 0;
 
+//		Aplica evento de clique na tela
+		boolean toqueTela = Gdx.input.justTouched();
+		if(	toqueTela ){
+			gravidade = -20;
+		}
+
+//		Aplica gravidade no passaro
+		if(posicaoInicialVerticalPassaro > 0 || toqueTela)
+		posicaoInicialVerticalPassaro = posicaoInicialVerticalPassaro - gravidade;
+
 		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
-		batch.draw(passaros[(int) variacao], 30, alturaDispositivo / 2);
+		batch.draw(passaros[(int) variacao], 30, posicaoInicialVerticalPassaro);
 
 		variacao += Gdx.graphics.getDeltaTime() * 10;
+
+		gravidade ++;
+//		gravidade = gravidade + 2;
 		movimentoX ++;
 		movimentoY ++;
 		batch.end();
